@@ -43,46 +43,34 @@ class TransactionsHistory extends State<TransactionsPage> {
       title: 'Transactions',
       theme: Style.buildLightTheme(),
       home: Scaffold(
-          appBar: getAppBar(),
-          body: Builder(
-            builder: (BuildContext context) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  getFilterBarUI(),
-                  Expanded(
-                    child: Center(
-                      child: FutureBuilder(
-                        future: transactions,
-                        builder: (context,
-                            AsyncSnapshot<List<Transaction>> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return Text('Check Your Internet Connection');
-                            case ConnectionState.done:
-                              if (snapshot.hasError || !snapshot.hasData) {
-                                return Text(
-                                  'No Transactions',
-                                  style: Style.textStyle1,
-                                );
-                              } else {
-                                return getList();
-                              }
-                            // case ConnectionState.active:
-                            // case ConnectionState.waiting:
-                            default:
-                              return CircularProgressIndicator(
-                                color: Style.pPrimaryColor,
-                              );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              );
+        appBar: getAppBar(),
+        body: Center(
+          child: FutureBuilder(
+            future: transactions,
+            builder: (context, AsyncSnapshot<List<Transaction>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text('Check Your Internet Connection');
+                case ConnectionState.done:
+                  if (snapshot.hasError || !snapshot.hasData) {
+                    return Text(
+                      'No Transactions',
+                      style: Style.textStyle1,
+                    );
+                  } else {
+                    return getList();
+                  }
+                // case ConnectionState.active:
+                // case ConnectionState.waiting:
+                default:
+                  return CircularProgressIndicator(
+                    color: Style.pPrimaryColor,
+                  );
+              }
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -129,11 +117,19 @@ class TransactionsHistory extends State<TransactionsPage> {
   }
 
   Widget getList() {
-    return ListView.builder(
-      itemCount: _transactions.length,
-      itemBuilder: (context, index) {
-        return getListItem(index);
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        getFilterBarUI(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _transactions.length,
+            itemBuilder: (context, index) {
+              return getListItem(index);
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -280,7 +276,7 @@ class TransactionsHistory extends State<TransactionsPage> {
     showDialog<dynamic>(
       context: context!,
       builder: (BuildContext context) => CalendarPopupView(
-        barrierDismissible: false,
+        barrierDismissible: true,
         minimumDate: DateTime.now().subtract(const Duration(days: 365)),
         //  maximumDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 10),
         initialEndDate: endDate,
