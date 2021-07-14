@@ -35,7 +35,8 @@ class Transaction {
   }
 
   DateTime getDateTime(){
-    return DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(date);
+    return DateTime.parse(date);
+    // return DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(date);
   }
 
   String getFormattedDate(){

@@ -1,11 +1,11 @@
 import 'package:assignment/controllers/transaction_controller.dart';
 import 'package:assignment/models/transaction.dart';
-import 'package:assignment/ui/transaction_detail.dart';
+import 'package:assignment/ui/views/transactions_list_item.dart';
 import 'package:assignment/theme/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'calendar_popup_view.dart';
+import '../views/calendar_popup_view.dart';
 
 class TransactionsPage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class TransactionsHistory extends State<TransactionsPage> {
   late Icon appBarIcon;
   late Widget appBarWidget;
 
-  DateTime startDate = DateTime.now().subtract(const Duration(days: 7));
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 30));
   DateTime endDate = DateTime.now();
 
   @override
@@ -125,77 +125,11 @@ class TransactionsHistory extends State<TransactionsPage> {
           child: ListView.builder(
             itemCount: _transactions.length,
             itemBuilder: (context, index) {
-              return getListItem(index);
+              return TransactionsListItem(_transactions[index]);
             },
           ),
         ),
       ],
-    );
-  }
-
-  Widget getListItem(int index) {
-    return InkWell(
-      child: Container(
-        margin: EdgeInsets.only(left: 8, top: 4, right: 8),
-        child: Card(
-          elevation: 3,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Stack(
-              alignment: AlignmentDirectional.centerStart,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  child: Image.asset(_transactions[index].getImage()),
-                ),
-                Positioned(
-                  left: 60,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(_transactions[index].getFormattedDate(),
-                          style: Style.textStyle1),
-                      Text(_transactions[index].type.toUpperCase(),
-                          style: Style.headingStyle1),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        _transactions[index].amount,
-                        style: _transactions[index].getAmountTextStyle(),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        child: Text(_transactions[index].currencyCode,
-                            style: Style.textStyle1),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        Navigator.push(
-          context,
-          new MaterialPageRoute(
-            builder: (context) => TransactionDetailPage(
-              _transactions[index],
-            ),
-          ),
-        );
-      },
     );
   }
 
